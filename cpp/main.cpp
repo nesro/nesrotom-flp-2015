@@ -16,10 +16,13 @@ public:
 	int operator() (const std::pair<int,int> &a,
 	    const std::pair<int,int> &b) { return (a.second > b.second); }};
 
-void
+/* Dijkstra's algorithm
+ * http://en.wikipedia.org/wiki/Dtra's_algorithm
+ * returning pair of vector of distances with vector of parents */
+std::pair<std::vector<int>,std::vector<int> >
 dijkstra(graph_t &graph, int node_from, int node_to)
 {
-	std::vector<int> pred(graph.size(), -1);
+	std::vector<int> prev(graph.size(), -1);
 	std::vector<int> dist(graph.size(), std::numeric_limits<int>::max());
 	std::priority_queue<std::pair<int,int>,
 	    std::vector<std::pair<int,int> >, priority_queue_comparator> queue;
@@ -42,19 +45,14 @@ dijkstra(graph_t &graph, int node_from, int node_to)
 			int alt_dist = dist[node] + edge_dist;
 			if (alt_dist < dist[edge_node]) {
 				dist[edge_node] = alt_dist;
-				pred[edge_node] = node;
+				prev[edge_node] = node;
 				queue.push(std::make_pair(edge_node,
 				    dist[edge_node]));
 			}
 		}
 	}
-	
-	if (dist[node_to] == std::numeric_limits<int>::max()) {
-		std::cout << "Back to jail" << std::endl;
-		return;
-	}
 
-	/* create the path */
+	/*
 	int p = node_to;
 	int p2 = pred[p];
 	while (p != node_from) {
@@ -66,16 +64,31 @@ dijkstra(graph_t &graph, int node_from, int node_to)
 		p = p2;
 		p2 = pred[p2];
 	}
-	
-	if (DEBUG)
-		std::cout << "lenght: " << dist[node_to] << std::endl;
+	*/
+
+	return (std::make_pair(dist, prev));
 }
 
 
-/* todo: http://en.wikipedia.org/wiki/Suurballe's_algorithm */
+/* http://en.wikipedia.org/wiki/Suurballe's_algorithm */
 void
-suurballe(graph_t &graph, int from, int to)
+suurballe(graph_t &graph, int node_from, int node_to)
 {
+	std::pair<std::vector<int>, std::vector<int> > dijkstra_tree;
+	std::vector<int> shortest_path;
+	int tmp_node;
+
+	dijkstra_tree = dijkstra(graph, node_from, node_to);
+
+	/* reconstruct the shortest path */
+	tmp_node = node_to;
+	while (tmp_node != node_from) {
+		shortest_path.push_back(tmp_node);
+		tmp_node = dijkstra_tree.second[tmp_node];
+	}
+	shortest_path.push_back(tmp_node);
+
+	/* TODO */
 
 }
 
@@ -113,7 +126,7 @@ main(void) {
 			    edge_weight));
 		}
 
-		suurballe(graph, 0, nodes - 1, 2);
+		suurballe(graph, 0, nodes - 1);
 	}
 
 	return (EXIT_SUCCESS);
