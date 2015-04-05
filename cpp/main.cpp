@@ -77,8 +77,9 @@ suurballe(graph_t &graph, int node_from, int node_to)
 	std::pair<std::vector<int>, std::vector<int> > dijkstra_tree;
 	std::vector<int> shortest_path;
 	int tmp_node;
+	graph_t graph_copy(graph);
 
-	dijkstra_tree = dijkstra(graph, node_from, node_to);
+	dijkstra_tree = dijkstra(graph, node_from, -1);
 
 	/* reconstruct the shortest path */
 	tmp_node = node_to;
