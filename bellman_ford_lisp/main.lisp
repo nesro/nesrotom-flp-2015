@@ -15,26 +15,19 @@
 (defun create_edge (i j v)
 	(decf i)
 	(decf j)
-	;(format t "D a[~D][~D]=~D~%" i j v)
 	(setf (aref a i j) v) 
 	(setf (aref a j i) v)
 	a)
 
 (defun read_edges (r)
-	(if (> r 0)
-		(progn
-			;(format t "D read_edges: r=~D~%" r)
-			(create_edge (read) (read) (read))
-			(read_edges (- r 1)))))
+	(when (> r 0)
+		(create_edge (read) (read) (read))
+		(read_edges (- r 1))))
 
 (defun relax (i j)
-	;(format t "D relax! n=~D i=~D j=~D ~%" n i j)
-	(if (> (aref a i j) 0)
-		(if (< (+ (aref d i) (aref a i j)) (aref d j))
-			(progn
-				;(format t "D     Relaxing!~%")
-				(setf (aref d j) (+ (aref d i) (aref a i j)))
-				(setf (aref p j) i)))))
+	(when (and (> (aref a i j) 0) (< (+ (aref d i) (aref a i j)) (aref d j))
+		(setf (aref d j) (+ (aref d i) (aref a i j)))
+		(setf (aref p j) i))))
 
 (defun cost_inner (i j acc)
 	(if (>= j 0)
@@ -45,10 +38,9 @@
 	(cost_inner (- n 1) (aref p (- n 1)) 0))
 
 (defun reverse_edges_inner (i j)
-	(if (>= j 0)
-		(progn
-			(setf (aref a j i) (- 0 (aref a j i)))
-			(reverse_edges_inner j (aref p i)))))
+	(when (>= j 0)
+		(setf (aref a j i) (- 0 (aref a j i)))
+		(reverse_edges_inner j (aref p i))))
 
 (defun reverse_edges ()
 	(reverse_edges_inner (- n 1) (aref p (- n 1))))
@@ -58,9 +50,7 @@
 	(setf d (make-array (list n_max) :initial-element 999))
 	(setf (aref d 0) 0)
 	(dotimes (k n) (dotimes (i n) (dotimes (j n)
-		(progn
-			;(format t "D bellman k=~D i=~D j=~D~%" k i j)
-			(relax i j)))))
+			(relax i j))))
 	a)
 
 (defun back_to_jail ()
@@ -73,14 +63,12 @@
 	(if (= n 0)
 		(quit)
 		(progn
-			;(format t "D n=~D~%" n)
 			(read_edges (read))
 			(bellman_ford)
 			(if (back_to_jail)
 				(format t "Back to jail~%")
 				(progn
 					(setf x (cost))
-					;(format t "D Second run! ~D ~%" x)
 					(reverse_edges)
 					(bellman_ford)
 					(if (back_to_jail)
