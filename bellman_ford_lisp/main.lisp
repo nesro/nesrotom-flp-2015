@@ -21,8 +21,7 @@
 	a)
 
 (defun read_edges (r)
-	(if (= r 0)
-		a
+	(if (> r 0)
 		(progn
 			;(format t "D read_edges: r=~D~%" r)
 			(create_edge (read) (read) (read))
