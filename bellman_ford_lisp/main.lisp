@@ -16,8 +16,7 @@
 	(decf i)
 	(decf j)
 	(setf (aref a i j) v) 
-	(setf (aref a j i) v)
-	a)
+	(setf (aref a j i) v))
 
 (defun read_edges (r)
 	(when (> r 0)
@@ -50,8 +49,7 @@
 	(setf d (make-array (list n_max) :initial-element 999))
 	(setf (aref d 0) 0)
 	(dotimes (k n) (dotimes (i n) (dotimes (j n)
-			(relax i j))))
-	a)
+			(relax i j)))))
 
 (defun back_to_jail ()
 	(if (= (aref p (- n 1)) -1)
