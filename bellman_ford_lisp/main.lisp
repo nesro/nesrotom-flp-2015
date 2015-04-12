@@ -6,10 +6,11 @@
 ; d = matice vzdalenosti
 ; n = pocet uzlu
 
-(defvar n_max 100)
+(defconstant n_max 100)
+(defconstant infinity 999999)
 (defvar a (make-array (list n_max n_max) :initial-element 0))
 (defvar p (make-array (list n_max) :initial-element -1))
-(defvar d (make-array (list n_max) :initial-element 999))
+(defvar d (make-array (list n_max) :initial-element infinity))
 (defvar n 0)
 
 (defun create_edge (i j v)
@@ -46,7 +47,7 @@
 
 (defun bellman_ford ()
 	(setf p (make-array (list n_max) :initial-element -1))
-	(setf d (make-array (list n_max) :initial-element 999))
+	(setf d (make-array (list n_max) :initial-element infinity))
 	(setf (aref d 0) 0)
 	(dotimes (k n) (dotimes (i n) (dotimes (j n)
 			(relax i j)))))
