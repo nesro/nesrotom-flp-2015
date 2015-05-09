@@ -1,6 +1,0 @@
-$ swipl -s main.pl -g main -t halt
-
-TODO: delete this:
-https://www.cl.cam.ac.uk/teaching/0809/Prolog/assessed.pdf
-https://github.com/tchap/prolog-bellman-ford/blob/master/bf.pl
-

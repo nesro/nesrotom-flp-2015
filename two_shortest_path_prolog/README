@@ -1,0 +1,9 @@
+Tests from Edux. One at time and then all at once.
+
+	n@t:~/MEGA/github/nesrotom-flp-2015/two_shortest_path_prolog$ ./test.sh 
+	test 1: OK
+	test 2: OK
+	test 3: OK
+	test 4: OK
+	test all: OK
+
