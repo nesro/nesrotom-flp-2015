@@ -51,12 +51,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; We cannot use iterative-cycles in your code. So, this is recursive! 8-)
 (defun recRelA (k)
-	(if (<= k n)
+	(if (< k n)
 		(progn
 			(recRelB 0)
 			(recRelA (+ k 1)))))
 (defun recRelB (j)
-	(if (<= j n)
+	(if (< j n)
 		(progn
 			(recRelC 0 j)
 			(recRelB (+ j 1)))))
