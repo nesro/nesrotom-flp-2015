@@ -1,10 +1,13 @@
-; VAROVANI
-; z nasledujiciho kodu se vam dost mozna bude chtit zvracet
-; jedna se o 1:1 prepis z C
-; a = matice sousednosti
-; p = matice predchudcu
-; d = matice vzdalenosti
-; n = pocet uzlu
+; MI-FLP FitBreak lisp
+; authors: {nesrotom,tatarsan}@fit.cvut.cz
+
+; Warning: this is not a good example of functional approach. We use a 2D matrix
+; as matrix storage. A list of lists would be much better.
+
+; a = adjacency matrix (matice sousednosti)
+; p = predecessor matrix (matice predchudcu)
+; d = distance matrix (matice vzdalenosti)
+; n = nodes count (pocet uzlu)
 
 (defconstant n_max 100)
 (defconstant infinity 999999)
@@ -45,17 +48,39 @@
 (defun reverse_edges ()
 	(reverse_edges_inner (- n 1) (aref p (- n 1))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; We cannot use iterative-cycles in your code. So, this is recursive! 8-)
+(defun recRelA (k)
+	(if (<= k n)
+		(progn
+			(recRelB 0)
+			(recRelA (+ k 1)))))
+(defun recRelB (j)
+	(if (<= j n)
+		(progn
+			(recRelC 0 j)
+			(recRelB (+ j 1)))))
+(defun recRelC (i j)
+	(if (< i n)
+		(progn
+			(relax j i)
+			(recRelC (+ i 1) j))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun bellman_ford ()
 	(setf p (make-array (list n_max) :initial-element -1))
 	(setf d (make-array (list n_max) :initial-element infinity))
 	(setf (aref d 0) 0)
-	(dotimes (k n) (dotimes (i n) (dotimes (j n)
-			(relax i j)))))
+	(recRelA 0))
+; We cannot use dotimes. :C If we could, this is an elegant solution:
+;	(dotimes (k n) (dotimes (i n) (dotimes (j n)
+;			(relax i j))))
 
 (defun back_to_jail ()
 	(if (= (aref p (- n 1)) -1)
-	 T
-	 NIL))
+	(progn
+		(format t "Back to jail~%")
+		NIL)
+	 T))
 
 (defun run (n_param)
 	(setf n n_param)
@@ -65,13 +90,11 @@
 			(read_edges (read))
 			(bellman_ford)
 			(if (back_to_jail)
-				(format t "Back to jail~%")
 				(progn
 					(setf x (cost))
 					(reverse_edges)
 					(bellman_ford)
 					(if (back_to_jail)
-						(format t "Back to jail~%")
 						(format t "~D~%"
 							(+ x (cost))))))))
 		(run (read)))
