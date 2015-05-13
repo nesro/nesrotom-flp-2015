@@ -27,14 +27,8 @@ w(N) :-
 	n(M), % read the number of edges into M
 	l(M, E), % load edges into E
 	maplist(ae, E), % for each edge, call add_edge
-	TMP1 is N + 98, % create two nodes for catching "no solution"
-	TMP2 is N + 99,
-	ae([TMP1, 1, 10000]),
-	ae([TMP1, N, 10000]),
-	ae([TMP2, 1, 10000]),
-	ae([TMP2, N, 10000]),
 	j(1,N,L), % jail. forth and back in the graph
-	(L > 999 -> writeln('Back to jail') ; writeln(L)), % print solution
+	(L > 9999 -> writeln('Back to jail') ; writeln(L)), % print solution
 	retractall(e(_,_,_)). % delete all edges
 
 % n = number(-Number)
@@ -77,14 +71,15 @@ t(A,B,V,P,L) :-
 % setof(+Template, +Goal, -Set) finds all solutions to the goal with the
 % template and the lists of templates is returned in the Set
 s(A,B,P,L) :-
-	setof(
-		[P2,L2], % template is [Path (list), Length (number)]
-		p(A,B,P2,L2), % the goal is to find a path from A to B
-		S), % result in S is the list of [Path (list), Lenght (number)]
-	S = [_|_], % if there is no path from A to B at all, the minimum
-	           % function would not work
-	m(S,[P,L]). % from all the paths with their lenghts, get the shortest
-	            % one
+	(setof([P2,L2], % template is [Path (list), Length (number)]
+	       p(A,B,P2,L2), % the goal is to find a path from A to B
+	       S) % result in S is the list of [Path (list), Lenght (number)]
+	-> % if there is such result S
+		m(S,[P,L]) % from all the paths with their lenghts, get the
+		           % shortest one
+	; % if there is no solution
+		L is 9999 % set L to infinity
+	).
 
 % m = minumum(+List, -Minimum), M is a list of [Path, Lenght]
 m([F|R],M) :-
