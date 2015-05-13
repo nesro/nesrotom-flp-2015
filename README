@@ -1,0 +1,10 @@
+	$ ./test.sh 
+	c compile: OK
+	c test: OK
+	lisp test: OK
+	prolog test 1: OK
+	prolog test 2: OK
+	prolog test 3: OK
+	prolog test 4: OK
+	prolog test all: OK
+
