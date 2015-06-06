@@ -1,4 +1,5 @@
-### Find two shortests edge disjoint paths in a graph. C, Lisp and Prolog
+Find two shortests edge disjoint paths in a graph. C, Lisp and Prolog
+=====================================================================
 
 There are few bugs in the source code comments and some things can be improved (reversing path in prolog is not mandatory).
 The Lisp soltution works exactly the same as in C (so the Lisp code is very bad and should be rewritten).
